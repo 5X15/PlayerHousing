@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,6 +23,7 @@ import net.myteria.HousingAPI;
 import net.myteria.PlayerHousing;
 import net.myteria.menus.GameRulesMenu;
 import net.myteria.menus.SettingsMenu;
+import net.myteria.utils.Scheduler;
 
 public class SettingsEvent implements Listener{
 	
@@ -50,9 +52,9 @@ public class SettingsEvent implements Listener{
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						Bukkit.getRegionScheduler().execute(PlayerHousing.getInstance(), player.getLocation(), () -> {
+						Scheduler.runTaskLater(player, PlayerHousing.getInstance(), () -> {
 							world.setDifficulty(Difficulty.NORMAL);
-						});
+						}, null, 1);
 						openSettingsMenu(player);
 						break;
 					}
@@ -64,9 +66,9 @@ public class SettingsEvent implements Listener{
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						Bukkit.getRegionScheduler().execute(PlayerHousing.getInstance(), player.getLocation(), () -> {
+						Scheduler.runTaskLater(player, PlayerHousing.getInstance(), () -> {
 							world.setDifficulty(Difficulty.HARD);
-						});
+						}, null, 1);
 						openSettingsMenu(player);
 						break;
 					}
@@ -78,9 +80,9 @@ public class SettingsEvent implements Listener{
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						Bukkit.getRegionScheduler().execute(PlayerHousing.getInstance(), player.getLocation(), () -> {
+						Scheduler.runTaskLater(player, PlayerHousing.getInstance(), () -> {
 							world.setDifficulty(Difficulty.PEACEFUL);
-						});
+						}, null, 1);
 						openSettingsMenu(player);
 						break;
 					}
@@ -92,9 +94,9 @@ public class SettingsEvent implements Listener{
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						Bukkit.getRegionScheduler().execute(PlayerHousing.getInstance(), player.getLocation(), () -> {
+						Scheduler.runTaskLater(player, PlayerHousing.getInstance(), () -> {
 							world.setDifficulty(Difficulty.EASY);
-						});
+						}, null, 1);
 						openSettingsMenu(player);
 						break;
 					}
@@ -102,7 +104,7 @@ public class SettingsEvent implements Listener{
 					break;
 				}
 				case CLOCK: {
-					Bukkit.getGlobalRegionScheduler().execute(PlayerHousing.getInstance(), () -> {
+					Scheduler.runTask(PlayerHousing.getInstance(), () -> {
 						if (world.isDayTime()) {
 							world.setTime(13000);
 						} 
@@ -114,7 +116,7 @@ public class SettingsEvent implements Listener{
 					break;
 				}
 				case DIAMOND_SWORD: {
-					Bukkit.getGlobalRegionScheduler().execute(PlayerHousing.getInstance(), () -> {
+					Scheduler.runTask(PlayerHousing.getInstance(), () -> {
 						world.setPVP(!world.getPVP());
 					});
 					api.getWorldConfig(owner.getUniqueId()).set(worndName + ".settings.pvp", world.getPVP());
@@ -208,10 +210,9 @@ public class SettingsEvent implements Listener{
 
 	private void openSettingsMenu(Player player) {
 		HousingAPI api = PlayerHousing.getAPI();
-		Bukkit.getRegionScheduler().runDelayed(PlayerHousing.getInstance(), player.getLocation(), (SchedulesTask) -> {
+		Scheduler.runTaskLater(player, PlayerHousing.getInstance(), () -> {
 			api.getSettingsMenu().setupInventory(player);
 			player.openInventory(api.getSettingsMenu().getInventory());
-		}, 1L);
-		
+		}, null, 1L);
 	}
 }

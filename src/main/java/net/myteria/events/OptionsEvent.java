@@ -38,37 +38,33 @@ public class OptionsEvent implements Listener{
 			Player player = (Player)event.getWhoClicked();
 			
 			World world = player.getWorld();
-			UUID uuid = api.getWorldOwner(world).getUniqueId();
 			Player target = (Player) ((SkullMeta)event.getClickedInventory().getItem(4).getItemMeta()).getOwningPlayer();
-			String selectedWorld = api.getWorldConfig(uuid).getString("default-world");
+			
+			if (target.isOnline() && target.getPlayer().getWorld() != world) {
+				Bukkit.getLogger().warning("Player performed an action but the worlds did not match! exploit? " + player.getName() + " -> Whitelist event");
+				return;
+			}
+			
 			if (clickedItem.getType() == Material.ARROW && event.getSlot() == 44) {
 				api.playersPage.replace(player, api.playersPage.get(player) + 1);
-				
 				api.getOnlinePlayersMenu().setInventory(api.playersInv.get(player), api.playersPage.get(player));
+				return;
 			}
 			if (clickedItem.getType() == Material.ARROW && event.getSlot() == 36) {
 				api.playersPage.replace(player, api.playersPage.get(player) - 1);
-				
 				api.getOnlinePlayersMenu().setInventory(api.playersInv.get(player), api.playersPage.get(player));
+				return;
 			}
 
 			if (clickedItem.getType() == Material.OAK_DOOR) {
 				player.closeInventory();
-				player.openInventory(new ConfirmMenu(Action.kick, target, null, null).getInventory());
+				player.openInventory(new ConfirmMenu(Action.Kick, target).getInventory());
+				return;
 			}
 			if (clickedItem.getType() == Material.TNT) {
 				player.closeInventory();
-				player.openInventory(new ConfirmMenu(Action.ban, target, null, null).getInventory());
-			}
-			if (clickedItem.getType() == Material.NAME_TAG) {
-				if (api.permissionsInv.get(player) == null) {
-					api.permissionsInv.put(player, Bukkit.createInventory(api.getPermissionsMenu(), 3*9, "Permissions Manager"));
-				}
-				api.inventoryTarget.put(player, target);
-				api.getPermissionsMenu().setInventory(api.permissionsInv.get(player), api.permissionsPage.get(player));
-				api.getPermissionsMenu().setupMenu(target.getUniqueId(), api.getPlayerRank(world, target), true);
-				player.closeInventory();
-				player.openInventory(api.getPermissionsMenu().getInventory());
+				player.openInventory(new ConfirmMenu(Action.Ban, target).getInventory());
+				return;
 			}
 		}
 		

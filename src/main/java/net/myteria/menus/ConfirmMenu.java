@@ -29,68 +29,14 @@ public class ConfirmMenu implements InventoryHolder {
 	int[] glassSlots = {3,4,5,12,14,21,22,23};
 	int[] headSlot = {13};
 	
-	public ConfirmMenu(Action action, OfflinePlayer target, @Nullable String rank, @Nullable String permission) {
-		switch(action) {
-			case kick:{
-				inv = Bukkit.createInventory(this, 3*9, "Kick " + target.getName());
-				setSlot(backSlots, setMeta(new ItemStack(Material.RED_WOOL), "Back", null));
-				setSlot(confirmSlots, setMeta(new ItemStack(Material.GREEN_WOOL), "Confirm", Action.kick, null));
-				setSlot(glassSlots, setMeta(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), " ", null));
-				setSlot(headSlot, setSkullMeta(new ItemStack(Material.PLAYER_HEAD), target));
-				break;
-			}
-			case ban: {
-				inv = Bukkit.createInventory(this, 3*9, "Ban " + target.getName());
-				setSlot(backSlots, setMeta(new ItemStack(Material.RED_WOOL), "Back", null));
-				setSlot(confirmSlots, setMeta(new ItemStack(Material.GREEN_WOOL), "Confirm", Action.ban, null));
-				setSlot(glassSlots, setMeta(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), " ", null));
-				setSlot(headSlot, setSkullMeta(new ItemStack(Material.PLAYER_HEAD), target));
-				break;
-			}
-			case unban: {
-				inv = Bukkit.createInventory(this, 3*9, "Unban " + target.getName());
-				setSlot(backSlots, setMeta(new ItemStack(Material.RED_WOOL), "Back", null));
-				setSlot(confirmSlots, setMeta(new ItemStack(Material.GREEN_WOOL), "Confirm", Action.unban, null));
-				setSlot(glassSlots, setMeta(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), " ", null));
-				setSlot(headSlot, setSkullMeta(new ItemStack(Material.PLAYER_HEAD), target));
-				break;
-			}
-			case addWhitelist: { 
-				inv = Bukkit.createInventory(this, 3*9, "Whitelist " + target.getName());
-				setSlot(backSlots, setMeta(new ItemStack(Material.RED_WOOL), "Back", null));
-				setSlot(confirmSlots, setMeta(new ItemStack(Material.GREEN_WOOL), "Confirm", Action.addWhitelist, null));
-				setSlot(glassSlots, setMeta(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), " ", null));
-				setSlot(headSlot, setSkullMeta(new ItemStack(Material.PLAYER_HEAD), target));
-				break;
-			}
-			case removeWhitelist: {
-				inv = Bukkit.createInventory(this, 3*9, "Un-Whitelist " + target.getName());
-				setSlot(backSlots, setMeta(new ItemStack(Material.RED_WOOL), "Back", null));
-				setSlot(confirmSlots, setMeta(new ItemStack(Material.GREEN_WOOL), "Confirm", Action.removeWhitelist, null));
-				setSlot(glassSlots, setMeta(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), " ", null));
-				setSlot(headSlot, setSkullMeta(new ItemStack(Material.PLAYER_HEAD), target));
-				break;
-			}
-			case addGroupPermission: {
-				inv = Bukkit.createInventory(this, 3*9, "Permission Manager");
-				setSlot(backSlots, setMeta(new ItemStack(Material.RED_WOOL), "Back", null));
-				setSlot(confirmSlots, setMeta(new ItemStack(Material.GREEN_WOOL), "Confirm", Action.addGroupPermission, rank, permission, null));
-				setSlot(glassSlots, setMeta(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), " ", null));
-				setSlot(headSlot, setSkullMeta(new ItemStack(Material.PLAYER_HEAD), target));
-				break;
-			}
-			case removeGroupPermission: {
-				inv = Bukkit.createInventory(this, 3*9, "Permission Manager");
-				setSlot(backSlots, setMeta(new ItemStack(Material.RED_WOOL), "Back", null));
-				setSlot(confirmSlots, setMeta(new ItemStack(Material.GREEN_WOOL), "Confirm", Action.removeGroupPermission, rank, permission, null));
-				setSlot(glassSlots, setMeta(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), " ", null));
-				setSlot(headSlot, setSkullMeta(new ItemStack(Material.PLAYER_HEAD), target));
-				break;
-			}
-			
-			default: break;
-			
-		}
+	public ConfirmMenu(Action action, OfflinePlayer target) {
+		String actionName = getActionName(action);
+		
+		inv = Bukkit.createInventory(this, 3*9, actionName + " " + target.getName());
+		setSlot(backSlots, setMeta(new ItemStack(Material.RED_WOOL), "Back", null));
+		setSlot(confirmSlots, setMeta(new ItemStack(Material.GREEN_WOOL), "Confirm", action, null));
+		setSlot(glassSlots, setMeta(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), " ", null));
+		setSlot(headSlot, setSkullMeta(new ItemStack(Material.PLAYER_HEAD), target));
 	}
 
 	@Override
@@ -146,6 +92,37 @@ public class ConfirmMenu implements InventoryHolder {
 		for (int invSlot: slot) {
 			inv.setItem(invSlot, item);
 		}
+	}
+	
+	public String getActionName(Action action) {
+		String actionName;
+		switch(action) {
+		  case addWhitelist: { 
+			actionName = "Whitelist";
+			break;
+		  }
+		case Ban: { 
+			actionName = "Ban";
+			break;
+		  }
+		case Kick: { 
+			actionName = "Kick";
+			break;
+		  }
+		case Unban: { 
+			actionName = "Unban";
+			break;
+		  }
+		case removeWhitelist: { 
+			actionName = "Un-whitelist";
+			break;
+		  }
+		default: { 
+			actionName = action.name();
+			break;
+		  }
+		}
+		return actionName;
 	}
 
 }

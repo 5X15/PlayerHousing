@@ -1,13 +1,7 @@
 package net.myteria.events;
 
-import java.io.IOException;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.GameRule;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,7 +14,6 @@ import org.bukkit.persistence.PersistentDataType;
 import net.myteria.HousingAPI.Action;
 import net.myteria.HousingAPI;
 import net.myteria.PlayerHousing;
-import net.myteria.menus.GameRulesMenu;
 import net.myteria.menus.OnlinePlayersMenu;
 
 public class OnlinePlayersEvent implements Listener{
@@ -34,18 +27,15 @@ public class OnlinePlayersEvent implements Listener{
 			ItemStack clickedItem = event.getCurrentItem();
 			Player player = (Player)event.getWhoClicked();
 			
-			World world = player.getWorld();
-			UUID uuid = api.getWorldOwner(world).getUniqueId();
-			String selectedWorld = api.getWorldConfig(uuid).getString("default-world");
 			if (clickedItem.getType() == Material.ARROW && event.getSlot() == 44) {
 				api.playersPage.replace(player, api.playersPage.get(player) + 1);
-				
 				api.getOnlinePlayersMenu().setInventory(api.playersInv.get(player), api.playersPage.get(player));
+				return;
 			}
 			if (clickedItem.getType() == Material.ARROW && event.getSlot() == 36) {
 				api.playersPage.replace(player, api.playersPage.get(player) - 1);
-				
 				api.getOnlinePlayersMenu().setInventory(api.playersInv.get(player), api.playersPage.get(player));
+				return;
 			}
 
 			if (clickedItem.getType() == Material.PLAYER_HEAD) {
@@ -70,6 +60,7 @@ public class OnlinePlayersEvent implements Listener{
 					break;
 				}
 			}
+			return;
 		}
 		
 	}

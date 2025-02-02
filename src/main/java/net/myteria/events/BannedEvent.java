@@ -1,12 +1,9 @@
 package net.myteria.events;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.GameRule;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -16,16 +13,12 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.persistence.PersistentDataType;
 
 import net.myteria.HousingAPI;
 import net.myteria.HousingAPI.Action;
 import net.myteria.PlayerHousing;
 import net.myteria.menus.BannedMenu;
 import net.myteria.menus.ConfirmMenu;
-import net.myteria.menus.GameRulesMenu;
-import net.myteria.menus.OnlinePlayersMenu;
-import net.myteria.menus.WhitelistMenu;
 
 public class BannedEvent implements Listener{
 	
@@ -39,27 +32,33 @@ public class BannedEvent implements Listener{
 			HousingAPI api = PlayerHousing.getAPI();
 			
 			World world = player.getWorld();
-			UUID uuid = PlayerHousing.getAPI().getWorldOwner(world).getUniqueId();
 			OfflinePlayer target = ((SkullMeta)event.getClickedInventory().getItem(13).getItemMeta()).getOwningPlayer();
-			String selectedWorld = api.getWorldConfig(uuid).getString("default-world");
+			
+			if (target.isOnline() && target.getPlayer().getWorld() != world) {
+				Bukkit.getLogger().warning("Player performed an action but the worlds did not match! exploit? " + player.getName() + " -> Banned event");
+				return;
+			}
+			
 			if (clickedItem.getType() == Material.ARROW && event.getSlot() == 44) {
 				api.playersPage.replace(player, api.playersPage.get(player) + 1);
-				
 				api.getOnlinePlayersMenu().setInventory(api.playersInv.get(player), api.playersPage.get(player));
+				return;
 			}
 			if (clickedItem.getType() == Material.ARROW && event.getSlot() == 36) {
 				api.playersPage.replace(player, api.playersPage.get(player) - 1);
-				
 				api.getOnlinePlayersMenu().setInventory(api.playersInv.get(player), api.playersPage.get(player));
+				return;
 			}
 
 			if (clickedItem.getType() == Material.GREEN_WOOL) {
 				player.closeInventory();
-				player.openInventory(new ConfirmMenu(Action.ban, target, null, null).getInventory());
+				player.openInventory(new ConfirmMenu(Action.Ban, target).getInventory());
+				return;
 			}
 			if (clickedItem.getType() == Material.RED_WOOL) {
 				player.closeInventory();
-				player.openInventory(new ConfirmMenu(Action.unban, target, null, null).getInventory());
+				player.openInventory(new ConfirmMenu(Action.Unban, target).getInventory());
+				return;
 			}
 		}
 		

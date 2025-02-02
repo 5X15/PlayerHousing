@@ -1,25 +1,17 @@
 package net.myteria.menus;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import net.md_5.bungee.api.ChatColor;
-import net.minecraft.nbt.NBTTagCompound;
 import net.myteria.HousingAPI;
 import net.myteria.PlayerHousing;
 

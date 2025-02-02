@@ -35,7 +35,6 @@ public class PlayerManagerMenu implements InventoryHolder {
 		ItemStack playersBtn = setMeta(new ItemStack(Material.BUCKET), "Online Players", null);
 		ItemStack bannedBtn = setMeta(new ItemStack(Material.BARRIER), "Ban Manager", null);
 		
-		
 		setSlot(purpleSlots, purple);
 		setSlot(graySlots, gray);
 		setSlot(magentaSlots, magenta);
@@ -46,7 +45,6 @@ public class PlayerManagerMenu implements InventoryHolder {
 	
 	@Override
 	public @NotNull Inventory getInventory() {
-		// TODO Auto-generated method stub
 		return inv;
 	}
 	
@@ -66,5 +64,4 @@ public class PlayerManagerMenu implements InventoryHolder {
 			inv.setItem(invSlot, item);
 		}
 	}
-
 }

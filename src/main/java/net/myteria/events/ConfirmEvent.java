@@ -38,73 +38,54 @@ public class ConfirmEvent implements Listener{
 			SkullMeta meta = (SkullMeta) event.getInventory().getItem(13).getItemMeta();
 			OfflinePlayer target = meta.getOwningPlayer();
 			
-			World world = player.getWorld();
-			
 			if (clickedItem.getType() == Material.ARROW && event.getSlot() == 44) {
 				api.playersPage.replace(player, api.playersPage.get(player) + 1);
-				
 				api.getOnlinePlayersMenu().setInventory(api.playersInv.get(player), api.playersPage.get(player));
+				return;
 			}
 			if (clickedItem.getType() == Material.ARROW && event.getSlot() == 36) {
 				api.playersPage.replace(player, api.playersPage.get(player) - 1);
-				
 				api.getOnlinePlayersMenu().setInventory(api.playersInv.get(player), api.playersPage.get(player));
+				return;
 			}
 
 			if (clickedItem.getType() == Material.GREEN_WOOL) {
 				Action action = Action.valueOf(clickedItem.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(PlayerHousing.getInstance(), "action"), PersistentDataType.STRING));
 			
 				switch(action) {
-					case kick:{
-						api.performAction(player, target, Action.kick, null, null);
+					case Kick:{
+						api.performAction(player, target, Action.Kick);
 						player.closeInventory();
 						break;
 					}
-					case ban:{
-						api.performAction(player, target, Action.ban, null, null);
+					case Ban:{
+						api.performAction(player, target, Action.Ban);
 						player.closeInventory();
 						break;
 					}
-					case unban:{
-						api.performAction(player, target, Action.unban, null, null);
+					case Unban:{
+						api.performAction(player, target, Action.Unban);
 						player.closeInventory();
 						break;
 					}
 					case addWhitelist:{
-						api.performAction(player, target, Action.addWhitelist, null, null);
+						api.performAction(player, target, Action.addWhitelist);
 						player.closeInventory();
 						break;
 					}
 					case removeWhitelist:{
-						api.performAction(player, target, Action.removeWhitelist, null, null);
+						api.performAction(player, target, Action.removeWhitelist);
 						player.closeInventory();
 						break;
-					}
-					case addGroupPermission:{
-						
-						String rank = clickedItem.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(PlayerHousing.getInstance(), "rank"), PersistentDataType.STRING);
-						String permission = clickedItem.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(PlayerHousing.getInstance(), "permission"), PersistentDataType.STRING);
-						if (rank != null || permission != null) {
-							api.performAction(player, target, Action.addGroupPermission, rank, permission);
-							player.closeInventory();
-							break;
-						}
-					}
-					case removeGroupPermission:{
-						String rank = clickedItem.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(PlayerHousing.getInstance(), "rank"), PersistentDataType.STRING);
-						String permission = clickedItem.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(PlayerHousing.getInstance(), "permission"), PersistentDataType.STRING);
-						if (rank != null || permission != null) {
-							api.performAction(player, target, Action.removeGroupPermission, rank, permission);
-							player.closeInventory();
-							break;
-						}
 					}
 					default:
 						break;
 				}
+				return;
 			}
 			if (clickedItem.getType() == Material.RED_WOOL) {
 				player.closeInventory();
+				return;
 			}
 		}
 		

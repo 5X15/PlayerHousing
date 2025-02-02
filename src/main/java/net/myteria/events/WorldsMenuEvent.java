@@ -7,10 +7,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 import org.bukkit.Bukkit;
-import org.bukkit.GameRule;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,7 +19,6 @@ import org.bukkit.persistence.PersistentDataType;
 
 import net.myteria.HousingAPI;
 import net.myteria.PlayerHousing;
-import net.myteria.menus.GameRulesMenu;
 import net.myteria.menus.WorldsMenu;
 
 public class WorldsMenuEvent implements Listener{
@@ -37,48 +34,58 @@ public class WorldsMenuEvent implements Listener{
 			
 			if (clickedItem.getType() == Material.ARROW && event.getSlot() == 44) {
 				api.worldsMenuPage.replace(player, api.worldsMenuPage.get(player) + 1);
-				
 				api.getWorldsMenu().setInventory(api.worldsMenuInv.get(player), api.worldsMenuPage.get(player));
+				return;
 			}
 			if (clickedItem.getType() == Material.ARROW && event.getSlot() == 36) {
 				api.worldsMenuPage.replace(player, api.worldsMenuPage.get(player) - 1);
-				
 				api.getWorldsMenu().setInventory(api.worldsMenuInv.get(player), api.worldsMenuPage.get(player));
+				return;
 			}
 
 			if (clickedItem.getItemMeta().getPersistentDataContainer().has(new NamespacedKey(PlayerHousing.getInstance(), "folder"))){
 				api.getConfigManager().verifyConfig(player.getUniqueId(), "world");
 				String folder = clickedItem.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(PlayerHousing.getInstance(), "folder"), PersistentDataType.STRING);
+				boolean isVoid = clickedItem.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(PlayerHousing.getInstance(), "isVoid"), PersistentDataType.BOOLEAN);
 				if (folder != null) {
 					Path rawPreset = Paths.get(PlayerHousing.getInstance().getDataFolder() + "/presets/" + folder);
+					if (!rawPreset.toFile().exists()) {
+						PlayerHousing.getInstance().getLogger().warning("Template '/presets/" + folder + "' does not exist!");
+						return;
+					}
 					Path rawDir = Paths.get("housing/", player.getUniqueId().toString() + "/world");
 					if (!rawDir.toFile().exists()) {
 						rawDir.toFile().mkdirs();
 					}
-					
-					try {
-			            // Copy the entire source folder to the target folder
-			            Files.walk(rawPreset)
-			                    .forEach(source -> {
-			                        Path target = rawDir.resolve(rawPreset.relativize(source));
-			                        try {
-			                            Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
-			                        } catch (IOException e) {
-			                            e.printStackTrace();
-			                        }
-			                    });
-			        } catch (IOException e) {
-			            e.printStackTrace();
-			        }
+					if (rawPreset.toFile().exists()) {
+						try {
+				            // Copy the entire source folder to the target folder
+				            Files.walk(rawPreset)
+				                    .forEach(source -> {
+				                        Path target = rawDir.resolve(rawPreset.relativize(source));
+				                        try {
+				                            Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+				                        } catch (IOException e) {
+				                            e.printStackTrace();
+				                        }
+				                    });
+				        } catch (IOException e) {
+				            e.printStackTrace();
+				        }
+					}
+					if (!isVoid) {
+						api.getWorldConfig(player.getUniqueId()).get("isvoid", false);
+					}
 					player.closeInventory();
 					api.loadWorld(player.getUniqueId());
 					api.joinWorld(player, player.getUniqueId());
+					return;
 				}
 
+			} else {
+				PlayerHousing.getInstance().getLogger().warning("Failed to load template " + clickedItem.getItemMeta().getItemName());
+				return;
 			}
-			
-			
 		}
-		
 	}
 }

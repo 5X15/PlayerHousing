@@ -90,7 +90,6 @@ public class SettingsMenu implements InventoryHolder {
 	
 	@Override
 	public @NotNull Inventory getInventory() {
-		// TODO Auto-generated method stub
 		return inv;
 	}
 	
@@ -110,5 +109,4 @@ public class SettingsMenu implements InventoryHolder {
 			inv.setItem(invSlot, item);
 		}
 	}
-
 }

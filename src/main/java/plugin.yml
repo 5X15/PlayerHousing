@@ -3,8 +3,8 @@ author: wildmaster84
 api-version: 1.13
 description: "This sucked to make :("
 main: net.myteria.PlayerHousing
-version: "2.8.1"
-depend: [LuckPerms]
+version: "2.8.4"
+depend: []
 folia-supported: true
 commands:
   visit:

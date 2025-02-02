@@ -1,6 +1,5 @@
 package net.myteria.menus;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -8,7 +7,6 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -34,15 +32,12 @@ public class OptionsMenu implements InventoryHolder {
 	List<String> rankLore;
 	public void setupMenu(OfflinePlayer player, World world) {
 		inv = Bukkit.createInventory(this, 3*9, "Options");
-		rankLore = new ArrayList<>();
-		rankLore.add(api.getPlayerRank(world, player));
 		
 		ItemStack purple = setMeta(new ItemStack(Material.PURPLE_STAINED_GLASS_PANE), " ", null);
 		ItemStack gray = setMeta(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), " ", null);
 		ItemStack magenta = setMeta(new ItemStack(Material.MAGENTA_STAINED_GLASS_PANE), " ", null);
 		ItemStack kickBtn = setMeta(new ItemStack(Material.OAK_DOOR), "Kick", null);
 		ItemStack headBtn = setSkullMeta(new ItemStack(Material.PLAYER_HEAD), player);
-		ItemStack rankBtn = setMeta(new ItemStack(Material.NAME_TAG), "Rank", rankLore);
 		ItemStack banBtn = setMeta(new ItemStack(Material.TNT), "Ban", null);
 		
 		
@@ -51,7 +46,6 @@ public class OptionsMenu implements InventoryHolder {
 		setSlot(magentaSlots, magenta);
 		setSlot(kickSlots, kickBtn);
 		setSlot(headSlot, headBtn);
-		setSlot(rankSlot, rankBtn);
 		setSlot(banSlot, banBtn);
 	}
 

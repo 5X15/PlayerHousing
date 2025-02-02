@@ -6,12 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.jetbrains.annotations.Nullable;
-
-import net.myteria.HousingAPI;
 import net.myteria.PlayerHousing;
 
 public class ConfigManager {	
@@ -33,8 +28,7 @@ public class ConfigManager {
     }
     
     public File getFile(UUID uuid) {
-    	File file = new File(String.format("housing/%s/%s.yml", uuid, uuid));
-    	return file;
+    	return new File(String.format("housing/%s/%s.yml", uuid, uuid));
     }
     
     public void setDefaults(UUID uuid, String world) {
@@ -45,6 +39,7 @@ public class ConfigManager {
     	whitelist.add(uuid.toString());
     	
     	config.set("default-world", world);
+    	config.set("isvoid", true);
     	config.set(world + ".whitelist", whitelist);
     	config.set(world + ".banned", new ArrayList<String>());
     	config.set(world + ".settings.gamemode", "ADVENTURE");
@@ -80,19 +75,12 @@ public class ConfigManager {
     	config.set(world + ".gamerules.randomTickSpeed", 3);
     	config.set(world + ".gamerules.reducedDebugInfo", false);
     	config.set(world + ".gamerules.tntExplosionDropDecay", false);
-    	config.set(world + ".ranks.default.members", new ArrayList<String>());
-    	config.set(world + ".ranks.default.permissions", new ArrayList<String>());
-    	config.set(world + ".ranks.trusted.members", whitelist);
-    	config.set(world + ".ranks.trusted.permissions", new ArrayList<String>());
     	try {
 			config.save(file);
 			PlayerHousing.getAPI().addWorldConfig(uuid, config);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	
-    	
     }
     
     public void verifyConfig(UUID uuid, String world) {
@@ -108,10 +96,13 @@ public class ConfigManager {
     	if (config.get("default-world") == null) {
     		config.set("default-world", world);
     	}
-    	if ((List<String>)config.getList(world + ".whitelist") == null) {
+    	if (config.get("isVoid") == null) {
+    		config.set("isvoid", true);
+    	}
+    	if (config.getStringList(world + ".whitelist").isEmpty()) {
     		config.set(world + ".whitelist", whitelist);
     	}
-    	if ((List<String>)config.getList(world + ".banned") == null) {
+    	if (config.getStringList(world + ".banned").isEmpty()) {
     		config.set(world + ".banned", new ArrayList<String>());
     	}
     	if (config.get(world + ".settings.gamemode") == null) {
@@ -213,28 +204,12 @@ public class ConfigManager {
     	if (config.get(world + ".gamerules.tntExplosionDropDecay") == null) {
     		config.set(world + ".gamerules.tntExplosionDropDecay", false);
     	}
-    	if (config.getList(world + ".ranks.default.members") == null) {
-    		config.set(world + ".ranks.default.members", new ArrayList<String>());
-    	}
-    	if (config.getList(world + ".ranks.default.permissions") == null) {
-    		config.set(world + ".ranks.default.permissions", new ArrayList<String>());
-    	}
-    	if (config.getList(world + ".ranks.trusted.members") == null) {
-    		config.set(world + ".ranks.trusted.members", whitelist);
-    	}
-    	if (config.getList(world + ".ranks.trusted.permissions") == null) {
-    		config.set(world + ".ranks.trusted.permissions", new ArrayList<String>());
-    	}
     	
     	try {
 			config.save(PlayerHousing.getAPI().getConfigManager().getFile(uuid));
 			PlayerHousing.getAPI().addWorldConfig(uuid, config);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	
-    	
     }
-
 }

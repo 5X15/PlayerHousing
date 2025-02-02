@@ -19,6 +19,7 @@ import org.bukkit.persistence.PersistentDataType;
 import net.myteria.HousingAPI;
 import net.myteria.PlayerHousing;
 import net.myteria.menus.GameRulesMenu;
+import net.myteria.utils.Scheduler;
 
 public class GameRulesEvent implements Listener{
 	
@@ -36,13 +37,13 @@ public class GameRulesEvent implements Listener{
 			String selectedWorld = api.getWorldConfig(uuid).getString("default-world");
 			if (clickedItem.getType() == Material.ARROW && event.getSlot() == 44) {
 				api.gameRulesPage.replace(player, api.gameRulesPage.get(player) + 1);
-				
 				api.getGameRulesMenu().setInventory(api.gameRulesInv.get(player), api.gameRulesPage.get(player));
+				return;
 			}
 			if (clickedItem.getType() == Material.ARROW && event.getSlot() == 36) {
 				api.gameRulesPage.replace(player, api.gameRulesPage.get(player) - 1);
-				
 				api.getGameRulesMenu().setInventory(api.gameRulesInv.get(player), api.gameRulesPage.get(player));
+				return;
 			}
 
 			// Subtract
@@ -51,19 +52,18 @@ public class GameRulesEvent implements Listener{
 				if (gamerule.contains("randomTickSpeed")) {
 					if ((clickedItem.getAmount() - 1) == 0) {
 						clickedItem.setType(Material.RED_WOOL);
-						Bukkit.getGlobalRegionScheduler().execute(PlayerHousing.getInstance(), () -> world.setGameRule(GameRule.RANDOM_TICK_SPEED, 0));
+						Scheduler.runTask(PlayerHousing.getInstance(), () -> world.setGameRule(GameRule.RANDOM_TICK_SPEED, 0));
 						api.getWorldConfig(uuid).set(selectedWorld + ".gamerules." + gamerule, 0);
 						try {
 							api.getWorldConfig(uuid).save(api.getConfigManager().getFile(uuid));
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						return;
 					} else {
 						clickedItem.setType(Material.GREEN_WOOL);
 						clickedItem.setAmount(clickedItem.getAmount() - 1);
-						Bukkit.getGlobalRegionScheduler().execute(PlayerHousing.getInstance(), () -> world.setGameRule(GameRule.RANDOM_TICK_SPEED, clickedItem.getAmount()));
+						Scheduler.runTask(PlayerHousing.getInstance(), () -> world.setGameRule(GameRule.RANDOM_TICK_SPEED, clickedItem.getAmount()));
 						api.getWorldConfig(uuid).set(selectedWorld + ".gamerules." + gamerule, clickedItem.getAmount());
 						try {
 							api.getWorldConfig(uuid).save(api.getConfigManager().getFile(uuid));
@@ -74,7 +74,20 @@ public class GameRulesEvent implements Listener{
 						return;
 					}
 				}
-
+				if (!gamerule.contains("randomTickSpeed")) {
+					GameRule gameRules = GameRule.getByName(gamerule);
+					Scheduler.runTask(PlayerHousing.getInstance(), () -> world.setGameRule(gameRules, false));
+					clickedItem.setType(Material.RED_WOOL);
+					api.getWorldConfig(uuid).set(selectedWorld + ".gamerules." + gamerule, false);
+					try {
+						api.getWorldConfig(uuid).save(api.getConfigManager().getFile(uuid));
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					return;
+				}
+				return;
 			}
 			
 			// Add
@@ -83,7 +96,7 @@ public class GameRulesEvent implements Listener{
 				if (gamerule.contains("randomTickSpeed")) {
 					if ((clickedItem.getAmount() + 1) >= 17) {
 						clickedItem.setType(Material.GREEN_WOOL);
-						Bukkit.getGlobalRegionScheduler().execute(PlayerHousing.getInstance(), () -> world.setGameRule(GameRule.RANDOM_TICK_SPEED, 16));
+						Scheduler.runTask(PlayerHousing.getInstance(), () -> world.setGameRule(GameRule.RANDOM_TICK_SPEED, 16));
 						api.getWorldConfig(uuid).set(selectedWorld + ".gamerules." + gamerule, 16);
 						try {
 							api.getWorldConfig(uuid).save(api.getConfigManager().getFile(uuid));
@@ -95,7 +108,7 @@ public class GameRulesEvent implements Listener{
 					} else {
 						clickedItem.setType(Material.GREEN_WOOL);
 						clickedItem.setAmount(clickedItem.getAmount());
-						Bukkit.getGlobalRegionScheduler().execute(PlayerHousing.getInstance(), () -> world.setGameRule(GameRule.RANDOM_TICK_SPEED, clickedItem.getAmount()));
+						Scheduler.runTask(PlayerHousing.getInstance(), () -> world.setGameRule(GameRule.RANDOM_TICK_SPEED, clickedItem.getAmount()));
 						api.getWorldConfig(uuid).set(selectedWorld + ".gamerules." + gamerule, 1);
 						try {
 							api.getWorldConfig(uuid).save(api.getConfigManager().getFile(uuid));
@@ -106,7 +119,7 @@ public class GameRulesEvent implements Listener{
 						return;
 					}
 				}
-				
+				return;
 			}
 			
 			// Subtract
@@ -115,7 +128,7 @@ public class GameRulesEvent implements Listener{
 				if (gamerule.contains("randomTickSpeed")) {
 					if ((clickedItem.getAmount() - 1) == 0) {
 						clickedItem.setType(Material.GREEN_WOOL);
-						Bukkit.getGlobalRegionScheduler().execute(PlayerHousing.getInstance(), () -> world.setGameRule(GameRule.RANDOM_TICK_SPEED, 0));
+						Scheduler.runTask(PlayerHousing.getInstance(), () -> world.setGameRule(GameRule.RANDOM_TICK_SPEED, 0));
 						api.getWorldConfig(uuid).set(selectedWorld + ".gamerules." + gamerule, 0);
 						try {
 							api.getWorldConfig(uuid).save(api.getConfigManager().getFile(uuid));
@@ -127,7 +140,7 @@ public class GameRulesEvent implements Listener{
 					} else {
 						clickedItem.setType(Material.RED_WOOL);
 						clickedItem.setAmount(clickedItem.getAmount() - 1);
-						Bukkit.getGlobalRegionScheduler().execute(PlayerHousing.getInstance(), () -> world.setGameRule(GameRule.RANDOM_TICK_SPEED, clickedItem.getAmount()));
+						Scheduler.runTask(PlayerHousing.getInstance(), () -> world.setGameRule(GameRule.RANDOM_TICK_SPEED, clickedItem.getAmount()));
 						api.getWorldConfig(uuid).set(selectedWorld + ".gamerules." + gamerule, clickedItem.getAmount());
 						try {
 							api.getWorldConfig(uuid).save(api.getConfigManager().getFile(uuid));
@@ -138,62 +151,9 @@ public class GameRulesEvent implements Listener{
 						return;
 					}
 				}
-
-			}
-						
-			// Add
-			if (clickedItem.getType() == Material.GREEN_WOOL && event.isRightClick()){
-				String gamerule = clickedItem.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(PlayerHousing.getInstance(), "gamerule"), PersistentDataType.STRING);
-				if (gamerule.contains("randomTickSpeed")) {
-					if ((clickedItem.getAmount() + 1) >= 17) {
-						Bukkit.getGlobalRegionScheduler().execute(PlayerHousing.getInstance(), () -> world.setGameRule(GameRule.RANDOM_TICK_SPEED, 16));
-						api.getWorldConfig(uuid).set(selectedWorld + ".gamerules." + gamerule, 16);
-						try {
-							api.getWorldConfig(uuid).save(api.getConfigManager().getFile(uuid));
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						return;
-					} else {
-						clickedItem.setAmount(clickedItem.getAmount() + 1);
-						Bukkit.getGlobalRegionScheduler().execute(PlayerHousing.getInstance(), () -> world.setGameRule(GameRule.RANDOM_TICK_SPEED, clickedItem.getAmount()));
-						api.getWorldConfig(uuid).set(selectedWorld + ".gamerules." + gamerule, clickedItem.getAmount());
-						try {
-							api.getWorldConfig(uuid).save(api.getConfigManager().getFile(uuid));
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						return;
-					}
-				}
-							
-			}
-			
-			if (clickedItem.getType() == Material.GREEN_WOOL) {
-				String gamerule = clickedItem.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(PlayerHousing.getInstance(), "gamerule"), PersistentDataType.STRING);
 				if (!gamerule.contains("randomTickSpeed")) {
 					GameRule gameRules = GameRule.getByName(gamerule);
-					Bukkit.getGlobalRegionScheduler().execute(PlayerHousing.getInstance(), () -> world.setGameRule(gameRules, false));
-					clickedItem.setType(Material.RED_WOOL);
-					api.getWorldConfig(uuid).set(selectedWorld + ".gamerules." + gamerule, false);
-					try {
-						api.getWorldConfig(uuid).save(api.getConfigManager().getFile(uuid));
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					return;
-				}
-					
-			}
-			
-			if (clickedItem.getType() == Material.RED_WOOL) {
-				String gamerule = clickedItem.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(PlayerHousing.getInstance(), "gamerule"), PersistentDataType.STRING);
-				if (!gamerule.contains("randomTickSpeed")) {
-					GameRule gameRules = GameRule.getByName(gamerule);
-					Bukkit.getGlobalRegionScheduler().execute(PlayerHousing.getInstance(), () -> world.setGameRule(gameRules, true));
+					Scheduler.runTask(PlayerHousing.getInstance(), () -> world.setGameRule(gameRules, true));
 					clickedItem.setType(Material.GREEN_WOOL);
 					api.getWorldConfig(uuid).set(selectedWorld + ".gamerules." + gamerule, true);
 					try {
@@ -204,9 +164,38 @@ public class GameRulesEvent implements Listener{
 					}
 					return;
 				}
-				
+				return;
+			}
+						
+			// Add
+			if (clickedItem.getType() == Material.GREEN_WOOL && event.isRightClick()){
+				String gamerule = clickedItem.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(PlayerHousing.getInstance(), "gamerule"), PersistentDataType.STRING);
+				if (gamerule.contains("randomTickSpeed")) {
+					if ((clickedItem.getAmount() + 1) >= 17) {
+						Scheduler.runTask(PlayerHousing.getInstance(), () -> world.setGameRule(GameRule.RANDOM_TICK_SPEED, 16));
+						api.getWorldConfig(uuid).set(selectedWorld + ".gamerules." + gamerule, 16);
+						try {
+							api.getWorldConfig(uuid).save(api.getConfigManager().getFile(uuid));
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						return;
+					} else {
+						clickedItem.setAmount(clickedItem.getAmount() + 1);
+						Scheduler.runTask(PlayerHousing.getInstance(), () -> world.setGameRule(GameRule.RANDOM_TICK_SPEED, clickedItem.getAmount()));
+						api.getWorldConfig(uuid).set(selectedWorld + ".gamerules." + gamerule, clickedItem.getAmount());
+						try {
+							api.getWorldConfig(uuid).save(api.getConfigManager().getFile(uuid));
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						return;
+					}
+				}
+				return;
 			}
 		}
-		
 	}
 }

@@ -19,7 +19,6 @@ public class housingCmd implements CommandExecutor {
 		Player player = (Player) sender;
 		
 		if (player.getWorld() == api.getWorld(player.getUniqueId())) {
-
 			player.openInventory(api.getHousingMenu().getInventory());
 			
 		} else {

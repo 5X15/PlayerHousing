@@ -38,29 +38,34 @@ public class WhitelistEvent implements Listener{
 			Player player = (Player)event.getWhoClicked();
 			
 			World world = player.getWorld();
-			UUID uuid = api.getWorldOwner(world).getUniqueId();
 			
 			OfflinePlayer target = ((SkullMeta)event.getClickedInventory().getItem(13).getItemMeta()).getOwningPlayer();
 			
-			String selectedWorld = api.getWorldConfig(uuid).getString("default-world");
+			if (target.isOnline() && target.getPlayer().getWorld() != world) {
+				Bukkit.getLogger().warning("Player performed an action but the worlds did not match! exploit? " + player.getName() + " -> Whitelist event");
+				return;
+			}
+			
 			if (clickedItem.getType() == Material.ARROW && event.getSlot() == 44) {
 				api.playersPage.replace(player, api.playersPage.get(player) + 1);
-				
 				api.getOnlinePlayersMenu().setInventory(api.playersInv.get(player), api.playersPage.get(player));
+				return;
 			}
 			if (clickedItem.getType() == Material.ARROW && event.getSlot() == 36) {
 				api.playersPage.replace(player, api.playersPage.get(player) - 1);
-				
 				api.getOnlinePlayersMenu().setInventory(api.playersInv.get(player), api.playersPage.get(player));
+				return;
 			}
 
 			if (clickedItem.getType() == Material.GREEN_WOOL) {
 				player.closeInventory();
-				player.openInventory(new ConfirmMenu(Action.addWhitelist, target, null, null).getInventory());
+				player.openInventory(new ConfirmMenu(Action.addWhitelist, target).getInventory());
+				return;
 			}
 			if (clickedItem.getType() == Material.RED_WOOL) {
 				player.closeInventory();
-				player.openInventory(new ConfirmMenu(Action.removeWhitelist, target, null, null).getInventory());
+				player.openInventory(new ConfirmMenu(Action.removeWhitelist, target).getInventory());
+				return;
 			}
 		}
 		

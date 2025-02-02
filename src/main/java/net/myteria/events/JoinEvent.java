@@ -17,7 +17,6 @@ public class JoinEvent implements Listener {
 		api.gameRulesPage.put(player, 0);
 		api.playersPage.put(player, 0);
 		api.worldsMenuPage.put(player, 0);
-		api.permissionsPage.put(player, 0);
 		
 		api.loadWorld(player.getUniqueId());
 		
