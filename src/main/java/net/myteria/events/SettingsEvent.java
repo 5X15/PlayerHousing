@@ -155,8 +155,8 @@ public class SettingsEvent implements Listener{
             	HousingAPI api = PlayerHousing.getAPI();
                 String message = event.getMessage();
                 OfflinePlayer owner = api.getWorldOwner(player.getWorld());
-                api.getWorldInstance(owner.getUniqueId()).setDescription(message.substring(0, 25));
-                player.sendMessage("§aYou have set the description to: §e" + message.substring(0, 25));
+                api.getWorldInstance(owner.getUniqueId()).setDescription(message);
+                player.sendMessage("§aYou have set the description to: §e" + message);
                 
             }
             pendingInputs.remove(playerId);

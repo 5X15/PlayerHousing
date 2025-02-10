@@ -74,7 +74,7 @@ public class PlayerWorld {
 	}
 	
 	public boolean setDescription(String status) {
-		this.config.set(getWorldName() + ".settings.description", status.substring(0, 25));
+		this.config.set(getWorldName() + ".settings.description", (status.length() > 25 ? status.substring(0, 25) : status));
 		return save(false);
 	}
 	
