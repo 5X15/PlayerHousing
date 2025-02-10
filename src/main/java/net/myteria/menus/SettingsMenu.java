@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import net.myteria.HousingAPI;
 import net.myteria.PlayerHousing;
+import net.myteria.objects.PlayerWorld;
 
 public class SettingsMenu implements InventoryHolder {
 	HousingAPI api = PlayerHousing.getAPI();
@@ -51,17 +52,17 @@ public class SettingsMenu implements InventoryHolder {
 		
 		OfflinePlayer owner = api.getWorldOwner(player.getWorld());
 		UUID uuid = owner.getUniqueId();
-		World world = player.getWorld();
-		String worldName = api.getWorldNameFromWorld(world);
+		PlayerWorld world = api.getWorldInstance(uuid);
+		String worldName =world.getWorldName();
 
 		inv = Bukkit.createInventory(this, 6*9, "Settings Menu");
 		
-		difficultyLore.add(world.getDifficulty().toString());
-		timeLore.add((world.isDayTime() ? "Day" : "Night"));
+		difficultyLore.add(world.getDifficulty().name().toUpperCase());
+		timeLore.add((world.getWorld().isDayTime() ? "Day" : "Night"));
 		pvpLore.add((world.getPVP() ? "PvP Enabled" : "PvP Disabled"));
-		gamemodeLore.add(api.getWorldConfig(owner.getUniqueId()).getString(worldName + ".settings.gamemode"));
+		gamemodeLore.add(world.getGamemode().name().toUpperCase());
 		gamerulesLore.add("GameRules Menu");
-		statusLore.add(api.getWorldConfig(uuid).getString(worldName + ".settings.status"));
+		statusLore.add(world.getStatus().name().toUpperCase());
 		deleteLore.add("Coming Soon!");
 		
 		ItemStack purple = setMeta(new ItemStack(Material.PURPLE_STAINED_GLASS_PANE), " ", null);

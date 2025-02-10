@@ -21,7 +21,7 @@ public class LoadWorld implements Listener{
 			World world = event.getWorld();
 			String name = event.getWorld().getName().split("/")[2];
 			UUID uuid = api.getWorldOwner(world).getUniqueId();
-			YamlConfiguration config = api.getWorldConfig(uuid);
+			YamlConfiguration config = api.getWorldInstance(uuid).getConfig();
 			
 			setGameRules(world, name, config);
 			

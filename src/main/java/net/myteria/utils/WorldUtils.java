@@ -58,6 +58,7 @@ import net.minecraft.world.level.storage.WorldDataServer;
 import net.minecraft.world.level.storage.WorldInfo;
 import net.minecraft.world.level.validation.ContentValidationException;
 import net.myteria.PlayerHousing;
+import net.myteria.objects.PlayerWorld;
 
 public class WorldUtils {
 	
@@ -193,9 +194,10 @@ public class WorldUtils {
         return internal.getWorld();
     }
 	
-	public void unloadWorld(org.bukkit.World bukkitWorld) {
+	public void unloadWorld(PlayerWorld world) {
+	    org.bukkit.World bukkitWorld = world.getWorld();
+	    PlayerHousing.getAPI().removeWorld(world);
 		if (bukkitWorld.getPlayerCount() != 0) {
-			PlayerHousing.getAPI().removeWorld(bukkitWorld);
 			for (Player player : bukkitWorld.getPlayers()) {
 				 Location spawn = Bukkit.getWorld("world").getSpawnLocation();
 			     player.teleportAsync(spawn);

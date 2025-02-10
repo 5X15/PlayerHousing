@@ -38,7 +38,7 @@ public final class PlayerHousing extends JavaPlugin {
 	public void onEnable() {
 		instance = this;
 		api = new HousingAPI(this);
-		setupConfigs();
+		setupConfig();
 		getCommand("visit").setExecutor(new visitCmd());
 		getCommand("housing").setExecutor(new housingCmd());
 		getServer().getPluginManager().registerEvents(new JoinEvent(), this);
@@ -62,7 +62,6 @@ public final class PlayerHousing extends JavaPlugin {
 		bannedMenu = new BannedMenu();
 		optionsMenu = new OptionsMenu();
 		worldsMenu = new WorldsMenu();
-		
 	}
 	
 	public static HousingAPI getAPI() {
@@ -73,21 +72,9 @@ public final class PlayerHousing extends JavaPlugin {
 		return instance;
 	}
 	
-	private final void setupConfigs() {
-		Path directory = Paths.get("housing");
-		if (!this.getConfig().isSet("worlds") || !this.getConfig().isSet("permissions")) {
+	private final void setupConfig() {
+		if (!this.getConfig().isSet("worlds")) {
         	this.saveDefaultConfig();
-        }
-        try {
-            List<Path> configs = Files.walk(directory, 2)  // Limit to one level deep
-                .filter(path -> path.toFile().isFile() && path.toString().endsWith(".yml"))
-                .collect(Collectors.toList());
-
-            for (Path config : configs) {
-                api.addWorldConfig(UUID.fromString(config.getFileName().toString().replace(".yml", "")), YamlConfiguration.loadConfiguration(config.toFile()));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         
         for (String world: this.getConfig().getConfigurationSection("worlds").getKeys(false)) {

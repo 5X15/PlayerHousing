@@ -24,7 +24,7 @@ public class GameRulesMenu implements InventoryHolder {
 			items.clear();
 		}
 		HousingAPI api = PlayerHousing.getAPI();
-		YamlConfiguration config = api.getWorldConfig(uuid);
+		YamlConfiguration config = api.getWorldInstance(uuid).getConfig();
 		String world = config.getString("default-world");
 		
 		if (items.isEmpty()) {

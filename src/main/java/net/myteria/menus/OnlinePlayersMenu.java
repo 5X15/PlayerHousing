@@ -30,7 +30,7 @@ public class OnlinePlayersMenu implements InventoryHolder {
 		HousingAPI api = PlayerHousing.getAPI();
 		World world = player.getWorld();
 		OfflinePlayer owner = api.getWorldOwner(world);
-		YamlConfiguration config = api.getWorldConfig(owner.getUniqueId());
+		YamlConfiguration config = api.getWorldInstance(owner.getUniqueId()).getConfig();
 		
 		if (items.isEmpty()) {
 			

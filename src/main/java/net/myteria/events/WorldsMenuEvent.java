@@ -20,6 +20,7 @@ import org.bukkit.persistence.PersistentDataType;
 import net.myteria.HousingAPI;
 import net.myteria.PlayerHousing;
 import net.myteria.menus.WorldsMenu;
+import net.myteria.objects.PlayerWorld;
 
 public class WorldsMenuEvent implements Listener{
 	
@@ -44,7 +45,8 @@ public class WorldsMenuEvent implements Listener{
 			}
 
 			if (clickedItem.getItemMeta().getPersistentDataContainer().has(new NamespacedKey(PlayerHousing.getInstance(), "folder"))){
-				api.getConfigManager().verifyConfig(player.getUniqueId(), "world");
+				api.getConfigManager().verifyConfig(player.getUniqueId());
+				PlayerWorld world = api.getWorldInstance(player.getUniqueId());
 				String folder = clickedItem.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(PlayerHousing.getInstance(), "folder"), PersistentDataType.STRING);
 				boolean isVoid = clickedItem.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(PlayerHousing.getInstance(), "isVoid"), PersistentDataType.BOOLEAN);
 				if (folder != null) {
@@ -53,7 +55,7 @@ public class WorldsMenuEvent implements Listener{
 						PlayerHousing.getInstance().getLogger().warning("Template '/presets/" + folder + "' does not exist!");
 						return;
 					}
-					Path rawDir = Paths.get("housing/", player.getUniqueId().toString() + "/world");
+					Path rawDir = Paths.get(String.format("housing/%s/%s", player.getUniqueId(), world.getWorldName()));
 					if (!rawDir.toFile().exists()) {
 						rawDir.toFile().mkdirs();
 					}
@@ -74,7 +76,8 @@ public class WorldsMenuEvent implements Listener{
 				        }
 					}
 					if (!isVoid) {
-						api.getWorldConfig(player.getUniqueId()).get("isvoid", false);
+						world.getConfig().set("isvoid", false);
+						world.save(false);
 					}
 					player.closeInventory();
 					api.loadWorld(player.getUniqueId());

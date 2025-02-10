@@ -21,8 +21,10 @@ import org.bukkit.persistence.PersistentDataType;
 
 import net.myteria.HousingAPI;
 import net.myteria.PlayerHousing;
+import net.myteria.HousingAPI.Status;
 import net.myteria.menus.GameRulesMenu;
 import net.myteria.menus.SettingsMenu;
+import net.myteria.objects.PlayerWorld;
 import net.myteria.utils.Scheduler;
 
 public class SettingsEvent implements Listener{
@@ -36,67 +38,30 @@ public class SettingsEvent implements Listener{
 			ItemStack clickedItem = event.getCurrentItem();
 			Player player = (Player)event.getWhoClicked();
 			OfflinePlayer owner = api.getWorldOwner(player.getWorld());
-			World world = player.getWorld();
-			String worndName = api.getWorldConfig(owner.getUniqueId()).getString("default-world");
-			String status = api.getWorldConfig(owner.getUniqueId()).getString(worndName + ".settings.status");
+			PlayerWorld world = api.getWorldInstance(owner.getUniqueId());
+			
 
 			// Subtract
 			switch(clickedItem.getType()) {
 				case SPAWNER: {
-					switch(api.getWorldConfig(owner.getUniqueId()).getString(worndName + ".settings.difficulty")) {
-					case "EASY": {
-						api.getWorldConfig(owner.getUniqueId()).set(worndName + ".settings.difficulty", "NORMAL");
-						try {
-							api.getWorldConfig(owner.getUniqueId()).save(api.getConfigManager().getFile(owner.getUniqueId()));
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						Scheduler.runTaskLater(player, PlayerHousing.getInstance(), () -> {
-							world.setDifficulty(Difficulty.NORMAL);
-						}, null, 1);
+					switch(world.getDifficulty()) {
+					case EASY: {
+						world.setDifficulty(Difficulty.NORMAL);
 						openSettingsMenu(player);
 						break;
 					}
-					case "NORMAL": {
-						api.getWorldConfig(owner.getUniqueId()).set(worndName + ".settings.difficulty","HARD");
-						try {
-							api.getWorldConfig(owner.getUniqueId()).save(api.getConfigManager().getFile(owner.getUniqueId()));
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						Scheduler.runTaskLater(player, PlayerHousing.getInstance(), () -> {
-							world.setDifficulty(Difficulty.HARD);
-						}, null, 1);
+					case NORMAL: {
+						world.setDifficulty(Difficulty.HARD);
 						openSettingsMenu(player);
 						break;
 					}
-					case "HARD": {
-						api.getWorldConfig(owner.getUniqueId()).set(worndName + ".settings.difficulty", "PEACEFUL");
-						try {
-							api.getWorldConfig(owner.getUniqueId()).save(api.getConfigManager().getFile(owner.getUniqueId()));
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						Scheduler.runTaskLater(player, PlayerHousing.getInstance(), () -> {
-							world.setDifficulty(Difficulty.PEACEFUL);
-						}, null, 1);
+					case HARD: {
+						world.setDifficulty(Difficulty.PEACEFUL);
 						openSettingsMenu(player);
 						break;
 					}
-					case "PEACEFUL": {
-						api.getWorldConfig(owner.getUniqueId()).set(worndName + ".settings.difficulty", "EASY");
-						try {
-							api.getWorldConfig(owner.getUniqueId()).save(api.getConfigManager().getFile(owner.getUniqueId()));
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						Scheduler.runTaskLater(player, PlayerHousing.getInstance(), () -> {
-							world.setDifficulty(Difficulty.EASY);
-						}, null, 1);
+					case PEACEFUL: {
+						world.setDifficulty(Difficulty.EASY);
 						openSettingsMenu(player);
 						break;
 					}
@@ -105,71 +70,35 @@ public class SettingsEvent implements Listener{
 				}
 				case CLOCK: {
 					Scheduler.runTask(PlayerHousing.getInstance(), () -> {
-						if (world.isDayTime()) {
-							world.setTime(13000);
+						if (world.getWorld().isDayTime()) {
+							world.getWorld().setTime(13000);
 						} 
-						if (!world.isDayTime()) {
-							world.setTime(1000);
+						else if (!world.getWorld().isDayTime()) {
+							world.getWorld().setTime(1000);
 						}
 					});
 					openSettingsMenu(player);
 					break;
 				}
 				case DIAMOND_SWORD: {
-					Scheduler.runTask(PlayerHousing.getInstance(), () -> {
-						world.setPVP(!world.getPVP());
-					});
-					api.getWorldConfig(owner.getUniqueId()).set(worndName + ".settings.pvp", world.getPVP());
-					try {
-						api.getWorldConfig(owner.getUniqueId()).save(api.getConfigManager().getFile(owner.getUniqueId()));
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					world.setPVP(!world.getPVP());
 					openSettingsMenu(player);
 					break;
 				}
 				case CRAFTING_TABLE: {
-					switch(api.getWorldConfig(owner.getUniqueId()).getString(worndName + ".settings.gamemode")) {
-						case "ADVENTURE": {
-							api.getWorldConfig(owner.getUniqueId()).set(worndName + ".settings.gamemode", "CREATIVE");
-							try {
-								api.getWorldConfig(owner.getUniqueId()).save(api.getConfigManager().getFile(owner.getUniqueId()));
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							for(Player players: world.getPlayers()) {
-								players.setGameMode(GameMode.CREATIVE);
-							}
+					switch(world.getGamemode()) {
+						case ADVENTURE: {
+							world.setGamemode(GameMode.CREATIVE);
 							openSettingsMenu(player);
 							break;
 						}
-						case "CREATIVE": {
-							api.getWorldConfig(owner.getUniqueId()).set(worndName + ".settings.gamemode","SURVIVAL");
-							try {
-								api.getWorldConfig(owner.getUniqueId()).save(api.getConfigManager().getFile(owner.getUniqueId()));
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							for(Player players: world.getPlayers()) {
-								players.setGameMode(GameMode.SURVIVAL);
-							}
+						case CREATIVE: {
+							world.setGamemode(GameMode.SURVIVAL);
 							openSettingsMenu(player);
 							break;
 						}
-						case "SURVIVAL": {
-							api.getWorldConfig(owner.getUniqueId()).set(worndName + ".settings.gamemode", "ADVENTURE");
-							try {
-								api.getWorldConfig(owner.getUniqueId()).save(api.getConfigManager().getFile(owner.getUniqueId()));
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							for(Player players: world.getPlayers()) {
-								players.setGameMode(GameMode.ADVENTURE);
-							}
+						case SURVIVAL: {
+							world.setGamemode(GameMode.ADVENTURE);
 							openSettingsMenu(player);
 							break;
 						}
@@ -188,13 +117,7 @@ public class SettingsEvent implements Listener{
 					
 				}
 				case OAK_DOOR: {
-					api.getWorldConfig(owner.getUniqueId()).set(worndName + ".settings.status", ((status == "PUBLIC") ? "PRIVATE" : "PUBLIC"));
-					try {
-						api.getWorldConfig(owner.getUniqueId()).save(api.getConfigManager().getFile(owner.getUniqueId()));
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					world.setStatus((world.getStatus() == Status.PUBLIC ? Status.PRIVATE : Status.PUBLIC));
 					openSettingsMenu(player);
 					break;
 				}

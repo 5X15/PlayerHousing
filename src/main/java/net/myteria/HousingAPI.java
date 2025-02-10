@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
@@ -15,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import net.myteria.menus.*;
+import net.myteria.objects.PlayerWorld;
 import net.myteria.utils.ConfigManager;
 import net.myteria.utils.WorldUtils;
 import net.myteria.utils.internals;
@@ -47,6 +49,14 @@ public class HousingAPI {
         Kick,
         Ban,
         Unban
+    }
+    
+    /**
+     * Enumeration representing various world status.
+     */
+    public enum Status {
+    	PUBLIC,
+    	PRIVATE
     }
     
     /**
@@ -142,12 +152,13 @@ public class HousingAPI {
     
     /**
      * Gets the raw world configuration.
-     * Note: Call this method only when necessary.
+     * @apiNote Use getWorldInstance(UUID).getConfig()
      * @param uuid The UUID of the world.
      * @return The YamlConfiguration of the world.
      */
+    @Deprecated
     public YamlConfiguration getWorldConfig(UUID uuid) {
-        return api.getWorldConfig(uuid);
+        return api.getWorldInstance(uuid).getConfig();
     }
     
     /**
@@ -156,26 +167,16 @@ public class HousingAPI {
      * @return The name of the selected world.
      */
     public String getSelectedWorldName(UUID uuid) {
-        return api.getSelectedWorldName(uuid);
+        return api.getWorldInstance(uuid).getWorldName();
     }
-
-    /**
-     * Adds a world configuration to the map.
-     * @param uuid The UUID of the world.
-     * @param config The configuration to be added.
-     * @return The previous configuration associated with the UUID, if any.
-     */
-    public YamlConfiguration addWorldConfig(UUID uuid, YamlConfiguration config) {
-        return api.addWorldConfig(uuid, config);
-	}
 	
 	/**
 	 * Used to get the worlds owner.
 	 * @param world The world to check.
-     * @return The UUID of the world owner.
+     * @return The UUID of the world owner. (Can be null)
      */
 	public OfflinePlayer getWorldOwner(World world) {
-		return api.getWorldOwner(world);
+		return api.getWorldObjectByWorld(world).getKey();
 	}
 	
 	/**
@@ -214,18 +215,18 @@ public class HousingAPI {
 	}
 	
 	/**
-	 * Gets a players world instance from UUID.
+	 * Gets a players world object from UUID.
 	 * @param uuid The world owners UUID.
      * @return  The world instance.
 	 */
-	public World getWorld(UUID uuid) {
-		return api.getWorld(uuid);
+	public PlayerWorld getWorldInstance(UUID uuid) {
+		return api.getWorldInstance(uuid);
 	}
 	
 	/**
 	 * Gets all loaded worlds
 	 */
-	public HashMap<OfflinePlayer, World> getWorlds() {
+	public HashMap<OfflinePlayer, PlayerWorld> getWorlds() {
 		return api.getWorlds();
 	}
 	
@@ -239,20 +240,19 @@ public class HousingAPI {
 	}
 
 	/**
-     * Sets the player's world instance. Usually used for changing their worlds.
+     * Sets the player's world instance. Only used for loading the worlds config
      * @param offlinePlayer The offline player whose world instance is being set.
-     * @param world The world instance to be set.
      */
-	public void addWorld(@NotNull OfflinePlayer offlinePlayer, World world) {
-		api.addWorld(offlinePlayer, world);
+	public void addWorldInstance(@NotNull OfflinePlayer offlinePlayer) {
+		api.addWorldInstance(offlinePlayer, new PlayerWorld(offlinePlayer));
 	}
 	
 	/**
-     * Removes the player's world instance. Usually used for changing their worlds.
+     * Removes the player's world instance. Usually used for deleting their worlds.
      * @param offlinePlayer The offline player whose world instance is being set.
      * @param world The world instance to be set.
      */
-	public void removeWorld(World world) {
+	public void removeWorld(PlayerWorld world) {
 		api.removeWorld(world);
 	}
 	
@@ -291,7 +291,7 @@ public class HousingAPI {
      * @return The name of the world.
      */
 	public String getWorldNameFromWorld(World world) {
-		return api.getWorldNameFromWorld(world);
+		return api.getWorldObjectByWorld(world).getValue().getWorldName();
 	}
 	
 	/**

@@ -1,19 +1,12 @@
 package net.myteria.events;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.bukkit.Bukkit;
-import org.bukkit.GameRule;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -22,8 +15,7 @@ import net.myteria.HousingAPI;
 import net.myteria.HousingAPI.Action;
 import net.myteria.PlayerHousing;
 import net.myteria.menus.ConfirmMenu;
-import net.myteria.menus.GameRulesMenu;
-import net.myteria.menus.OnlinePlayersMenu;
+import net.myteria.objects.PlayerWorld;
 
 public class ConfirmEvent implements Listener{
 	HousingAPI api = PlayerHousing.getAPI();
@@ -35,6 +27,8 @@ public class ConfirmEvent implements Listener{
 			event.setCancelled(true);
 			ItemStack clickedItem = event.getCurrentItem();
 			Player player = (Player)event.getWhoClicked();
+			OfflinePlayer owner = api.getWorldOwner(player.getWorld());;
+			PlayerWorld world = api.getWorldInstance(owner.getUniqueId());
 			SkullMeta meta = (SkullMeta) event.getInventory().getItem(13).getItemMeta();
 			OfflinePlayer target = meta.getOwningPlayer();
 			
@@ -54,27 +48,51 @@ public class ConfirmEvent implements Listener{
 			
 				switch(action) {
 					case Kick:{
-						api.performAction(player, target, Action.Kick);
+						boolean status = world.removePlayer(target.getUniqueId());
+						if (status) {
+							player.sendMessage("Kicked " + target.getName());
+						} else {
+							player.sendMessage("Failed to kick " + target.getName());
+						}
 						player.closeInventory();
 						break;
 					}
 					case Ban:{
-						api.performAction(player, target, Action.Ban);
+						boolean status = world.ban(target.getUniqueId());
+						if (status) {
+							player.sendMessage("Banned " + target.getName());
+						} else {
+							player.sendMessage("Failed to ban " + target.getName());
+						}
 						player.closeInventory();
 						break;
 					}
 					case Unban:{
-						api.performAction(player, target, Action.Unban);
+						boolean status = world.unban(target.getUniqueId());
+						if (status) {
+							player.sendMessage("Unbanned " + target.getName());
+						} else {
+							player.sendMessage("Failed to ban " + target.getName());
+						}
 						player.closeInventory();
 						break;
 					}
 					case addWhitelist:{
-						api.performAction(player, target, Action.addWhitelist);
-						player.closeInventory();
+						boolean status = world.whitelist(target.getUniqueId());
+						if (status) {
+							player.sendMessage("Whitelisted " + target.getName());
+						} else {
+							player.sendMessage("Failed to whitelist " + target.getName());
+						}
 						break;
 					}
 					case removeWhitelist:{
-						api.performAction(player, target, Action.removeWhitelist);
+						boolean status = world.unwhitelist(target.getUniqueId());
+						if (status) {
+							player.sendMessage("Un-whitelisted " + target.getName());
+						} else {
+							player.sendMessage("Failed to un-whitelist " + target.getName());
+						}
 						player.closeInventory();
 						break;
 					}
@@ -87,8 +105,6 @@ public class ConfirmEvent implements Listener{
 				player.closeInventory();
 				return;
 			}
-		}
-		
+		}	
 	}
-
 }
