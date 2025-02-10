@@ -69,6 +69,15 @@ public class PlayerWorld {
 		return save(false);
 	}
 	
+	public String getDescription() {
+		return this.config.getString(getWorldName() + ".settings.description", "A Player World");
+	}
+	
+	public boolean setDescription(String status) {
+		this.config.set(getWorldName() + ".settings.description", status.substring(0, 25));
+		return save(false);
+	}
+	
 	public boolean setGameRule(GameRule gamerule, Object value) {
 		Scheduler.runTask(plugin, () -> {
 			this.world.setGameRule(gamerule, value);

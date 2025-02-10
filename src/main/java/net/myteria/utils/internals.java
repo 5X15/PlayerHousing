@@ -67,6 +67,10 @@ public final class internals {
     public TemplatesMenu getTemplatesMenu() {
         return instance.templatesMenu;
     }
+    
+    public WorldsMenu getWorldsMenu() {
+        return instance.worldsMenu;
+    }
 
     public ConfigManager getConfigManager() {
         return configManager;

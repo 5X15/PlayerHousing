@@ -22,16 +22,17 @@ import net.myteria.objects.PlayerWorld;
 public class SettingsMenu implements InventoryHolder {
 	HousingAPI api = PlayerHousing.getAPI();
 	Inventory inv = null;
-	int[] purpleSlots = {0, 2, 3, 4, 5, 6, 8, 10, 16, 18, 26, 28, 34, 38, 39, 41, 42, 45, 48, 50, 53};
+	int[] purpleSlots = {0, 2, 3, 5, 6, 8, 10, 13, 16, 18, 26, 28, 34, 38, 40, 42, 45, 48, 49, 50, 53};
 	int[] graySlots = {1, 7, 9, 17, 27, 35, 36, 37, 43, 44, 46, 47, 51, 52};
-	int[] magentaSlots = {12, 14, 19, 20, 21, 22, 23, 24, 25, 30, 32, 40};
+	int[] magentaSlots = {12, 14, 19, 20, 21, 23, 24, 25, 30, 31, 32};
 	int[] difficultySlots = {11};
-	int[] timeSlots = {13};
+	int[] timeSlots = {4};
 	int[] pvpSlots = {15};
 	int[] gamemodeSlots = {29};
-	int[] gameruleSlots = {31};
+	int[] gameruleSlots = {22};
 	int[] statusSlots = {33};
-	int[] deleteSlots = {49};
+	int[] deleteSlots = {39};
+	int[] displaySlots = {41};
 	List<String> difficultyLore = new ArrayList<>();
 	List<String> timeLore = new ArrayList<>();
 	List<String> pvpLore = new ArrayList<>();
@@ -39,6 +40,7 @@ public class SettingsMenu implements InventoryHolder {
 	List<String> gamerulesLore = new ArrayList<>();
 	List<String> statusLore = new ArrayList<>();
 	List<String> deleteLore = new ArrayList<>();
+	List<String> displayLore = new ArrayList<>();
 	
 	public void setupInventory(Player player) {
 		difficultyLore.clear();
@@ -48,6 +50,7 @@ public class SettingsMenu implements InventoryHolder {
 		gamerulesLore.clear();
 		statusLore.clear();
 		deleteLore.clear();
+		displayLore.clear();
 		
 		
 		OfflinePlayer owner = api.getWorldOwner(player.getWorld());
@@ -64,6 +67,7 @@ public class SettingsMenu implements InventoryHolder {
 		gamerulesLore.add("GameRules Menu");
 		statusLore.add(world.getStatus().name().toUpperCase());
 		deleteLore.add("Coming Soon!");
+		displayLore.add(world.getDescription());
 		
 		ItemStack purple = setMeta(new ItemStack(Material.PURPLE_STAINED_GLASS_PANE), " ", null);
 		ItemStack gray = setMeta(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), " ", null);
@@ -75,6 +79,7 @@ public class SettingsMenu implements InventoryHolder {
 		ItemStack gamerulesBtn = setMeta(new ItemStack(Material.BOOK), "GameRules", gamerulesLore);
 		ItemStack statusBtn = setMeta(new ItemStack(Material.OAK_DOOR), "Status", statusLore);
 		ItemStack deleteBtn = setMeta(new ItemStack(Material.TNT), "Delete World", deleteLore);
+		ItemStack displayBtn = setMeta(new ItemStack(Material.OAK_SIGN), "Description", displayLore);
 		
 		
 		setSlot(purpleSlots, purple);
@@ -87,6 +92,7 @@ public class SettingsMenu implements InventoryHolder {
 		setSlot(gameruleSlots, gamerulesBtn);
 		setSlot(statusSlots, statusBtn);
 		setSlot(deleteSlots, deleteBtn);
+		setSlot(displaySlots, displayBtn);
 	}
 	
 	@Override

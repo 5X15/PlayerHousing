@@ -33,13 +33,13 @@ public class TemplatesMenuEvent implements Listener{
 			Player player = (Player)event.getWhoClicked();
 			
 			if (clickedItem.getType() == Material.ARROW && event.getSlot() == 44) {
-				api.worldsMenuPage.replace(player, api.worldsMenuPage.get(player) + 1);
-				api.getTemplatesMenu().setInventory(api.worldsMenuInv.get(player), api.worldsMenuPage.get(player));
+				api.templatesMenuPage.replace(player, api.templatesMenuPage.get(player) + 1);
+				api.getTemplatesMenu().setInventory(api.templatesMenuInv.get(player), api.templatesMenuPage.get(player));
 				return;
 			}
 			if (clickedItem.getType() == Material.ARROW && event.getSlot() == 36) {
-				api.worldsMenuPage.replace(player, api.worldsMenuPage.get(player) - 1);
-				api.getTemplatesMenu().setInventory(api.worldsMenuInv.get(player), api.worldsMenuPage.get(player));
+				api.templatesMenuPage.replace(player, api.templatesMenuPage.get(player) - 1);
+				api.getTemplatesMenu().setInventory(api.templatesMenuInv.get(player), api.templatesMenuPage.get(player));
 				return;
 			}
 

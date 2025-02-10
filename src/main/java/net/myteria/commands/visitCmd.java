@@ -27,6 +27,10 @@ public class visitCmd implements CommandExecutor {
 			
 			api.joinWorld(player, target.getUniqueId());
 		}
+		
+		api.worldsMenuInv.put(player, Bukkit.createInventory(api.getWorldsMenu(), 5*9, "Player Worlds"));
+		api.getWorldsMenu().setInventory(api.worldsMenuInv.get(player), api.worldsMenuPage.get(player));
+		player.openInventory(api.getWorldsMenu().getInventory());
 		return true;
 	}
 

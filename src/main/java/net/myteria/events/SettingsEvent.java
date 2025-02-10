@@ -1,33 +1,29 @@
 package net.myteria.events;
 
-import java.io.IOException;
+import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.GameMode;
-import org.bukkit.GameRule;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataType;
 
 import net.myteria.HousingAPI;
 import net.myteria.PlayerHousing;
 import net.myteria.HousingAPI.Status;
-import net.myteria.menus.GameRulesMenu;
 import net.myteria.menus.SettingsMenu;
 import net.myteria.objects.PlayerWorld;
 import net.myteria.utils.Scheduler;
 
 public class SettingsEvent implements Listener{
+	private static final HashMap<UUID, String> pendingInputs = new HashMap<>();
 	
 	@EventHandler
 	public void onInventoryClicked(InventoryClickEvent event) {
@@ -124,6 +120,13 @@ public class SettingsEvent implements Listener{
 				case TNT: {
 					break;
 				}
+				case OAK_SIGN: {
+					player.closeInventory();
+	                player.sendMessage("§aType your new description in chat:");
+
+	                // Store the player's pending input type
+	                pendingInputs.put(player.getUniqueId(), "");
+				}
 				default:
 					break;
 				}
@@ -138,4 +141,25 @@ public class SettingsEvent implements Listener{
 			player.openInventory(api.getSettingsMenu().getInventory());
 		}, null, 1L);
 	}
+	
+	@EventHandler
+    public void onPlayerChat(AsyncPlayerChatEvent event) {
+        Player player = event.getPlayer();
+        UUID playerId = player.getUniqueId();
+
+        if (pendingInputs.containsKey(playerId)) {
+            event.setCancelled(true); // Cancel normal chat message
+            String inputType = pendingInputs.get(playerId);
+
+            if (inputType.isEmpty()) {
+            	HousingAPI api = PlayerHousing.getAPI();
+                String message = event.getMessage();
+                OfflinePlayer owner = api.getWorldOwner(player.getWorld());
+                api.getWorldInstance(owner.getUniqueId()).setDescription(message.substring(0, 25));
+                player.sendMessage("§aYou have set the description to: §e" + message.substring(0, 25));
+                
+            }
+            pendingInputs.remove(playerId);
+        }
+    }
 }

@@ -16,6 +16,7 @@ public class LeaveEvent implements Listener {
 		api.gameRulesPage.remove(event.getPlayer());
 		api.playersPage.remove(event.getPlayer());
 		api.worldsMenuPage.remove(event.getPlayer());
+		api.templatesMenuPage.remove(event.getPlayer());
 		//api.unloadWorld(event.getPlayer().getUniqueId());
 		
 	}

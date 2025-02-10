@@ -65,6 +65,10 @@ public class ConfigManager {
     		config.set(world + ".settings.status", "PRIVATE");
     		save = true;
     	}
+    	if (config.get(world + ".settings.description") == null) {
+    		config.set(world + ".settings.description", "A Player World");
+    		save = true;
+    	}
     	if (config.get(world + ".settings.pvp") == null) {
     		config.set(world + ".settings.pvp", false);
     		save = true;

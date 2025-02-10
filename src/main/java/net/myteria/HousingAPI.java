@@ -30,6 +30,8 @@ public class HousingAPI {
 	public HashMap<Player, Integer> gameRulesPage = new HashMap<>();
     public HashMap<Player, Player> inventoryTarget = new HashMap<>();
     public HashMap<Player, Inventory> gameRulesInv = new HashMap<>();
+    public HashMap<Player, Integer> templatesMenuPage = new HashMap<>();
+    public HashMap<Player, Inventory> templatesMenuInv = new HashMap<>();
     public HashMap<Player, Integer> worldsMenuPage = new HashMap<>();
     public HashMap<Player, Inventory> worldsMenuInv = new HashMap<>();
     public HashMap<Player, Integer> playersPage = new HashMap<>();
@@ -124,11 +126,19 @@ public class HousingAPI {
     }
     
     /**
-     * Retrieves the WorldsMenu instance.
-     * @return The WorldsMenu instance.
+     * Retrieves the TemplatesMenu instance.
+     * @return The TemplatesMenu instance.
      */
     public TemplatesMenu getTemplatesMenu() {
         return api.getTemplatesMenu();
+    }
+    
+    /**
+     * Retrieves the WorldsMenu instance.
+     * @return The WorldsMenu instance.
+     */
+    public WorldsMenu getWorldsMenu() {
+        return api.getWorldsMenu();
     }
 
     /**

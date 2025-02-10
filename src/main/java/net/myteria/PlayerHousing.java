@@ -25,6 +25,7 @@ public final class PlayerHousing extends JavaPlugin {
 	public OptionsMenu optionsMenu;
 	public BannedMenu bannedMenu;
 	public TemplatesMenu templatesMenu;
+	public WorldsMenu worldsMenu;
 	
 	public void onEnable() {
 		instance = this;
@@ -44,6 +45,7 @@ public final class PlayerHousing extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new OptionsEvent(), this);
 		getServer().getPluginManager().registerEvents(new BannedEvent(), this);
 		getServer().getPluginManager().registerEvents(new TemplatesMenuEvent(), this);
+		getServer().getPluginManager().registerEvents(new WorldsMenuEvent(), this);
 		gameRulesMenu = new GameRulesMenu();
 		settingsMenu = new SettingsMenu();
 		housingMenu = new HousingMenu();
@@ -53,6 +55,7 @@ public final class PlayerHousing extends JavaPlugin {
 		bannedMenu = new BannedMenu();
 		optionsMenu = new OptionsMenu();
 		templatesMenu = new TemplatesMenu();
+		worldsMenu = new WorldsMenu();
 	}
 	
 	public static HousingAPI getAPI() {
