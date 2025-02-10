@@ -6,7 +6,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -22,7 +21,7 @@ import net.myteria.PlayerHousing;
 import net.myteria.menus.TemplatesMenu;
 import net.myteria.objects.PlayerWorld;
 
-public class WorldsMenuEvent implements Listener{
+public class TemplatesMenuEvent implements Listener{
 	
 	@EventHandler
 	public void onInventoryClicked(InventoryClickEvent event) {

@@ -43,7 +43,7 @@ public final class PlayerHousing extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new WhitelistEvent(), this);
 		getServer().getPluginManager().registerEvents(new OptionsEvent(), this);
 		getServer().getPluginManager().registerEvents(new BannedEvent(), this);
-		getServer().getPluginManager().registerEvents(new WorldsMenuEvent(), this);
+		getServer().getPluginManager().registerEvents(new TemplatesMenuEvent(), this);
 		gameRulesMenu = new GameRulesMenu();
 		settingsMenu = new SettingsMenu();
 		housingMenu = new HousingMenu();
