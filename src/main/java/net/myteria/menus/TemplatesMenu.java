@@ -11,11 +11,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.myteria.HousingAPI;
 import net.myteria.PlayerHousing;
 
-public class WorldsMenu implements InventoryHolder {
+public class TemplatesMenu implements InventoryHolder {
 	private List<ItemStack> items = new ArrayList<>();
 	private Inventory inv;
 	
-	public WorldsMenu() {
+	public TemplatesMenu() {
 		HousingAPI api = PlayerHousing.getAPI();
 		for (ItemStack item: api.presets) {
 			items.add(item);

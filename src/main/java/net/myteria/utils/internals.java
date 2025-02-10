@@ -18,15 +18,7 @@ import net.kyori.adventure.util.TriState;
 import net.myteria.PlayerHousing;
 import net.myteria.HousingAPI.Action;
 import net.myteria.HousingAPI.Status;
-import net.myteria.menus.BannedMenu;
-import net.myteria.menus.GameRulesMenu;
-import net.myteria.menus.HousingMenu;
-import net.myteria.menus.OnlinePlayersMenu;
-import net.myteria.menus.OptionsMenu;
-import net.myteria.menus.PlayerManagerMenu;
-import net.myteria.menus.SettingsMenu;
-import net.myteria.menus.WhitelistMenu;
-import net.myteria.menus.WorldsMenu;
+import net.myteria.menus.*;
 import net.myteria.objects.PlayerWorld;
 
 public final class internals {
@@ -72,8 +64,8 @@ public final class internals {
         return instance.bannedMenu;
     }
 
-    public WorldsMenu getWorldsMenu() {
-        return instance.worldsMenu;
+    public TemplatesMenu getTemplatesMenu() {
+        return instance.templatesMenu;
     }
 
     public ConfigManager getConfigManager() {

@@ -27,9 +27,9 @@ public class housingCmd implements CommandExecutor {
 				api.joinWorld(player, player.getUniqueId());
 				return true;
 			}
-			api.worldsMenuInv.put(player, Bukkit.createInventory(api.getWorldsMenu(), 5*9, "Worlds Menu"));
-			api.getWorldsMenu().setInventory(api.worldsMenuInv.get(player), api.worldsMenuPage.get(player));
-			player.openInventory(api.getWorldsMenu().getInventory());
+			api.worldsMenuInv.put(player, Bukkit.createInventory(api.getTemplatesMenu(), 5*9, "Templates Menu"));
+			api.getTemplatesMenu().setInventory(api.worldsMenuInv.get(player), api.worldsMenuPage.get(player));
+			player.openInventory(api.getTemplatesMenu().getInventory());
 		}
 				
 		return true;

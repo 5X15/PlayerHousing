@@ -19,7 +19,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import net.myteria.HousingAPI;
 import net.myteria.PlayerHousing;
-import net.myteria.menus.WorldsMenu;
+import net.myteria.menus.TemplatesMenu;
 import net.myteria.objects.PlayerWorld;
 
 public class WorldsMenuEvent implements Listener{
@@ -27,7 +27,7 @@ public class WorldsMenuEvent implements Listener{
 	@EventHandler
 	public void onInventoryClicked(InventoryClickEvent event) {
 		if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
-		if (event.getClickedInventory().getHolder() instanceof WorldsMenu) {
+		if (event.getClickedInventory().getHolder() instanceof TemplatesMenu) {
 			HousingAPI api = PlayerHousing.getAPI();
 			event.setCancelled(true);
 			ItemStack clickedItem = event.getCurrentItem();
@@ -35,12 +35,12 @@ public class WorldsMenuEvent implements Listener{
 			
 			if (clickedItem.getType() == Material.ARROW && event.getSlot() == 44) {
 				api.worldsMenuPage.replace(player, api.worldsMenuPage.get(player) + 1);
-				api.getWorldsMenu().setInventory(api.worldsMenuInv.get(player), api.worldsMenuPage.get(player));
+				api.getTemplatesMenu().setInventory(api.worldsMenuInv.get(player), api.worldsMenuPage.get(player));
 				return;
 			}
 			if (clickedItem.getType() == Material.ARROW && event.getSlot() == 36) {
 				api.worldsMenuPage.replace(player, api.worldsMenuPage.get(player) - 1);
-				api.getWorldsMenu().setInventory(api.worldsMenuInv.get(player), api.worldsMenuPage.get(player));
+				api.getTemplatesMenu().setInventory(api.worldsMenuInv.get(player), api.worldsMenuPage.get(player));
 				return;
 			}
 

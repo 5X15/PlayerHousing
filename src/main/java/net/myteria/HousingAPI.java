@@ -127,8 +127,8 @@ public class HousingAPI {
      * Retrieves the WorldsMenu instance.
      * @return The WorldsMenu instance.
      */
-    public WorldsMenu getWorldsMenu() {
-        return api.getWorldsMenu();
+    public TemplatesMenu getTemplatesMenu() {
+        return api.getTemplatesMenu();
     }
 
     /**

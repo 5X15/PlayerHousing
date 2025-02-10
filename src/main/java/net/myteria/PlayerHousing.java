@@ -1,16 +1,7 @@
 package net.myteria;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -33,7 +24,7 @@ public final class PlayerHousing extends JavaPlugin {
 	public PlayerManagerMenu managerMenu;
 	public OptionsMenu optionsMenu;
 	public BannedMenu bannedMenu;
-	public WorldsMenu worldsMenu;
+	public TemplatesMenu templatesMenu;
 	
 	public void onEnable() {
 		instance = this;
@@ -61,7 +52,7 @@ public final class PlayerHousing extends JavaPlugin {
 		whitelistMenu = new WhitelistMenu();
 		bannedMenu = new BannedMenu();
 		optionsMenu = new OptionsMenu();
-		worldsMenu = new WorldsMenu();
+		templatesMenu = new TemplatesMenu();
 	}
 	
 	public static HousingAPI getAPI() {
