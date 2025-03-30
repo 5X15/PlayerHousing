@@ -24,7 +24,7 @@ import net.myteria.PlayerHousing;
 public class ConfirmMenu implements InventoryHolder {
 	HousingAPI api = PlayerHousing.getAPI();
 	Inventory inv;
-	int[] backSlots = {0,1,2,9,10,11,18,19,20};
+	int[] cancelSlots = {0,1,2,9,10,11,18,19,20};
 	int[] confirmSlots = {6,7,8,15,16,17,24,25,26};
 	int[] glassSlots = {3,4,5,12,14,21,22,23};
 	int[] headSlot = {13};
@@ -33,7 +33,7 @@ public class ConfirmMenu implements InventoryHolder {
 		String actionName = getActionName(action);
 		
 		inv = Bukkit.createInventory(this, 3*9, actionName + " " + target.getName());
-		setSlot(backSlots, setMeta(new ItemStack(Material.RED_WOOL), "Back", null));
+		setSlot(cancelSlots, setMeta(new ItemStack(Material.RED_WOOL), "Cancel", null));
 		setSlot(confirmSlots, setMeta(new ItemStack(Material.GREEN_WOOL), "Confirm", action, null));
 		setSlot(glassSlots, setMeta(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), " ", null));
 		setSlot(headSlot, setSkullMeta(new ItemStack(Material.PLAYER_HEAD), target));
