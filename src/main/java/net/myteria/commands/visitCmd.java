@@ -21,7 +21,7 @@ public class visitCmd implements CommandExecutor {
 		if (args.length >= 1) {
 			OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
 			if (target == null || !target.hasPlayedBefore()) {
-				player.sendMessage(args[0] + " could not be found!");
+				player.sendMessage(args[0] + "s house could not be found! :(");
 				return true;
 			}
 			

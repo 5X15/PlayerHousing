@@ -1,0 +1,46 @@
+name: Bug Report
+description: Report an issue with the project
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: "### Please fill out the following details to help us resolve the issue."
+  
+  - type: input
+    id: title
+    attributes:
+      label: "Title"
+      description: "Give a short summary of the issue."
+      placeholder: "Briefly describe the issue"
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: "Steps to Reproduce"
+      description: "List the steps to reproduce the issue."
+      placeholder: |
+        1. Step 1
+        2. Step 2
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual_result
+    attributes:
+      label: "Actual Result"
+      description: "What actually happened?"
+      placeholder: "Printed fizz not fizzbuzz"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_result
+    attributes:
+      label: "Expected Result"
+      description: "What should have happened instead?"
+      placeholder: "Should of printed fizzbuzz not fizz"
+    validations:
+      required: true
